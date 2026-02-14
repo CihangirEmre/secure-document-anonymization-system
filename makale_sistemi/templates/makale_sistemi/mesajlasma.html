@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesajlaşma Alanı</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #28a745;
+            color: white;
+            align-self: flex-end;
+        }
+        .editor-message {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-start;
+        }
+        .message-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .send-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <h2>Mesajlaşma</h2>
+        <div class="chat-box" id="chatBox">
+            <!-- Mesajlar buraya AJAX ile yüklenecek -->
+        </div>
+        
+        <!-- Mesaj gönderme alanı -->
+        <input type="text" id="mesaj" class="message-input" placeholder="Mesajınızı yazın...">
+        <button class="send-button" onclick="mesajGonder()">Gönder</button>
+    </div>
+
+    <script>
+        function mesajlariGetir() {
+            $.get("{% url 'mesajlari_getir' %}", function(data) {
+                var chatBox = $("#chatBox");
+                chatBox.html("");  // Önce mesajları temizle
+                
+                if (data.mesajlar.length === 0) {
+                    chatBox.append("<p>Henüz mesaj bulunmamaktadır.</p>");
+                } else {
+                    data.mesajlar.forEach(function (mesaj) {
+                        var mesajHtml = "<div class='message " + (mesaj.gonderen === "{{ request.session.email }}" ? "user-message" : "editor-message") + "'>";
+                        mesajHtml += "<strong>" + mesaj.gonderen + ":</strong> " + mesaj.icerik;
+                        mesajHtml += "</div>";
+                        chatBox.append(mesajHtml);
+                    });
+                }
+                chatBox.scrollTop(chatBox[0].scrollHeight);
+            });
+        }
+
+        function mesajGonder() {
+            var mesaj = $("#mesaj").val();
+            if (mesaj.trim() !== "") {
+                $.ajax({
+                    url: "{% url 'mesaj_gonder' %}",
+                    type: "POST",
+                    data: {
+                        "icerik": mesaj,
+                        "csrfmiddlewaretoken": "{{ csrf_token }}"
+                    },
+                    success: function (response) {
+                        $("#mesaj").val("");
+                        mesajlariGetir();
+                    },
+                    error: function (error) {
+                        console.log("Mesaj gönderme hatası:", error);
+                    }
+                });
+            }
+        }
+
+        // Sayfa yüklendiğinde mesajları getir
+        $(document).ready(function() {
+            mesajlariGetir();
+            setInterval(mesajlariGetir, 5000);  // 5 saniyede bir mesajları güncelle
+        });
+    </script>
+
+</body>
+</html>

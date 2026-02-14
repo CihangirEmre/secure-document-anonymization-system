@@ -1,0 +1,73 @@
+<h2>Sayfa 3 İçeriği</h2>
+<p>Makalelerin Sonuç kısmı burda yer alıcak.
+    Hakemlerin Değerlendirmeleri vs burda gözükür.
+</p>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Değerlendirilmiş Makaleler</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <h2>Hakem Tarafından Değerlendirilmiş Makaleler</h2>
+
+    {% if degerlendirme_dosyalar %}
+    <table>
+        <thead>
+            <tr>
+                <th>Takip Numarası</th>
+                <th>Yüklenme Tarihi</th>
+                <th>PDF</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dosya in degerlendirme_dosyalar %}
+            <tr>
+                <td>{{ dosya.takip }}</td>
+                <td>{{ dosya.tarih|date:"Y-m-d H:i" }}</td>
+                <td><a href="{{ dosya.dosya_url }}" target="_blank">İndir / Görüntüle</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Henüz değerlendirilen bir makaleniz bulunmamaktadır.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

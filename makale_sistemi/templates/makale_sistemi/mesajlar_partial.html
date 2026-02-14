@@ -1,0 +1,11 @@
+{% for mesaj in mesajlar %}
+    {% if mesaj.gonderen == kullanici %}
+        <div class="message user-message">
+            <strong>Sen:</strong> {{ mesaj.icerik }}
+        </div>
+    {% else %}
+        <div class="message editor-message">
+            <strong>Editör:</strong> {{ mesaj.icerik }}
+        </div>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kullanıcı Sayfası</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        /* Navbar */
+        .navbar {
+            display: flex;
+            background-color: #222;
+            padding: 10px;
+            overflow-x: auto;
+        }
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .navbar a:hover, .navbar a.active {
+            background-color: #4CAF50;
+        }
+        /* İçerik Alanı */
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            background: #f9f9f9;
+        }
+        .back-btn {
+            width: 100%;
+            padding: 8px;
+            background-color: #222;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <a href="#" class="tab-link active" onclick="openTab('makale_yukle')">Makale Yükle</a>
+        <a href="#" class="tab-link" onclick="openTab('mesajlasma')">Editör İletişim</a>
+        <a href="#" class="tab-link" onclick="openTab('makale_goruntule')">Makalelerim</a>
+        <a href="#" class="tab-link" onclick="openTab('ornek_sayfa3')">Sonuç</a>
+        <a href="{% url 'giris_sayfasi' %}">
+            <button class="back-btn">Çıkış Yap</button>
+        </a>
+    </div>
+
+    <!-- IFrame ile Sayfaları Yükleme Alanı -->
+    <div class="content">
+        <iframe id="contentFrame" src="{% url 'makale_yukle' %}"></iframe>
+    </div>
+
+    <script>
+        function openTab(sayfa) {
+            var iframe = document.getElementById('contentFrame');
+            var links = document.querySelectorAll('.tab-link');
+
+            // Aktif sekmeyi değiştir
+            links.forEach(link => link.classList.remove('active'));
+
+            if (sayfa === "makale_yukle") {
+                iframe.src = "{% url 'makale_yukle' %}";
+                links[0].classList.add('active');
+            } else if (sayfa === "mesajlasma") {
+                iframe.src = "{% url 'mesajlasma' %}";
+                links[1].classList.add('active');
+            } else if (sayfa === "makale_goruntule") {
+                iframe.src = "{% url 'makale_goruntule' %}";
+                links[2].classList.add('active');
+            } else if (sayfa === "ornek_sayfa3") {
+                iframe.src = "{% url 'ornek_sayfa3' %}";
+                links[3].classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>

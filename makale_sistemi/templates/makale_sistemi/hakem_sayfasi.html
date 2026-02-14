@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ hakem.name }} - Hakem Sayfası</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .back-btn {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background-color: #c82333;
+        }
+
+        .article-container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .Beklemede {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .Değerlendirmede {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .Kabul {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .Reddedildi {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .hakem-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="title">{{ hakem.name }} - Hakem Sayfası</h1>
+        <p class="info"><strong>Uzmanlık Alanı:</strong> {{ hakem.uzmanlik_alani }}</p>
+        <p class="info"><strong>Email:</strong> {{ hakem.email }}</p>
+
+        <a href="{% url 'giris_sayfasi' %}">
+            <button class="back-btn">Geri Dön</button>
+        </a>
+    </div>
+
+
+    <div class="article-container">
+        <h2>Makaleler</h2>
+
+        {% if makaleler %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Takip Numarası</th>
+                    <th>Yüklenme Tarihi</th>
+                    <th>Durum</th>
+                    <th>PDF</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for makale in makaleler %}
+                <tr>
+                    <td>{{ makale.takip_numarasi }}</td>
+                    <td>{{ makale.yuklenme_tarihi|date:"Y-m-d H:i" }}</td>
+                    <td><span class="status {{ makale.durum }}">{{ makale.durum }}</span></td>
+                    <td>
+                        <a href="{{ makale.anonim_pdf_dosya.url }}" target="_blank">Görüntüle</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <form method="POST" action="{% url 'hakem_degerlendir' makale.id %}">
+                            {% csrf_token %}
+                            <textarea name="yorum" placeholder="Değerlendirme yazınız..." rows="4"
+                                style="width: 100%; margin-bottom:10px;"></textarea>
+                            <button type="submit" class="hakem-btn">Değerlendirmeyi Gönder</button>
+                        </form>
+                    </td>
+                    {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Henüz atanmış makale bulunmamaktadır.</p>
+        {% endif %}
+    </div>
+
+</body>
+
+</html>

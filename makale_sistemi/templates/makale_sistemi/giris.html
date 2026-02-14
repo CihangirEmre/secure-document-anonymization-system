@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makale Yükleme Sistemi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .giris-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .giris-container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .giris-container input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .giris-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .giris-container button:hover {
+            background-color: #218838;
+        }
+
+        .uyari {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .hakem-formu {
+            margin-top: 30px;
+            width: 300px;
+            text-align: left;
+        }
+
+        .hakem-formu label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .hakem-formu select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .hakem-formu button {
+            width: 100%;
+            padding: 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .hakem-formu button:hover {
+            background-color: #0056b3;
+        }
+
+
+        .makaleTakip-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .makaleTakip-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="giris-container">
+        <h1>Makale Yükleme Sistemi</h1>
+        <form method="post" action="{% url 'giris_sayfasi' %}">
+            {% csrf_token %} <!-- CSRF token ekleyin -->
+            <input type="email" name="email" placeholder="E-posta adresinizi girin" required>
+            <button type="submit">Devam Et</button>
+        </form>
+        <div id="uyari" class="uyari"></div>
+    </div>
+
+    <a href="{% url 'makale_sorgulama' %}">
+        <button class="makaleTakip-btn">Makale Durumu Sorgulama</button>
+    </a>
+
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (event) {
+            var email = document.querySelector('input[name="email"]').value;
+            var uyari = document.getElementById('uyari');
+
+            // Basit e-posta formatı kontrolü
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                event.preventDefault();  // Formun gönderilmesini engelle
+                uyari.textContent = "Geçersiz e-posta formatı!";
+            } else {
+                uyari.textContent = "";
+            }
+        });
+    </script>
+
+    <h3>Hakem Girişi</h3>
+    <div class="hakem-formu">
+        <form method="get" onsubmit="hakemYonlendir(); return false;">
+            <label for="hakemselector">Hakem Seçin:</label>
+            <select name="hakem" id="hakemselector" required>
+                <option value="">Hakem Seçin</option>
+                <option value="CihangirEmreEr">Cihangir Emre Er - Yapay Zeka ve Makine Öğrenimi</option>
+                <option value="ElifEceEr">Elif Ece Er - İnsan-Bilgisayar Etkileşimi</option>
+                <option value="TravisScott">Travis Scott - Büyük Veri ve Veri Analitiği</option>
+                <option value="KanyeWest">Kanye West - Siber Güvenlik</option>
+                <option value="RobertPattinson">Robert Pattinson - Ağ ve Dağıtık Sistemler</option>
+            </select>
+            <button type="submit" class="hakem-btn">Giriş</button>
+        </form>
+    </div>
+
+    <script>
+        function hakemYonlendir() {
+            const selector = document.getElementById("hakemselector");
+            const hakemAdi = selector.value;
+    
+            if (hakemAdi) {
+                const encodedHakemAdi = encodeURIComponent(hakemAdi);
+                window.location.href = `/makalesistemi/hakem/${encodedHakemAdi}`;
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h2>Mesajı Cevapla</h2>
+
+<p><strong>Konu:</strong> {{ mesaj.konu|default:"(Konu yok)" }}</p>
+
+<p><strong>Gönderen:</strong> 
+    {% if mesaj.gonderen_kullanici %}
+        {{ mesaj.gonderen_kullanici.email }}
+    {% elif mesaj.gonderen_editor %}
+        {{ mesaj.gonderen_editor.email }}
+    {% else %}
+        (Gönderen bilinmiyor)
+    {% endif %}
+</p>
+
+<p><strong>Mesaj:</strong> {{ mesaj.icerik|default:"(İçerik yok)" }}</p>
+
+<form method="post">{% csrf_token %}
+    <textarea name="icerik" rows="5" cols="60" placeholder="Cevabınızı yazınız..."></textarea><br><br>
+    <input type="submit" value="Cevabı Gönder">
+</form>
+
+<a href="../../" style="display: inline-block; margin-top: 10px;">← Geri dön</a>
+{% endblock %}

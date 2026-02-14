@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makale Sorgulama</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 50px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: auto;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 10px;
+            font-size: 16px;
+            color: red;
+        }
+
+        .result {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <h1>Makale Durumu Sorgula</h1>
+
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="E-posta adresiniz" required>
+            <input type="text" name="takip_numarasi" placeholder="Takip Numaranız" required>
+            <button type="submit">Sorgula</button>
+        </form>
+
+        {% if mesaj %}
+        <div class="message">{{ mesaj }}</div>
+        {% endif %}
+
+        {% if makale %}
+        <div class="result">
+            <strong>Makale Durumu:</strong> {{ makale.durum }}
+        </div>
+        {% endif %}
+    </div>
+    <a href="{% url 'giris_sayfasi' %}" class="back-btn">Geri Dön</a>
+
+</body>
+
+</html>
