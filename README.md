@@ -99,5 +99,5 @@ Editor:
 - Decrypt tags when necessary
 - Monitor system logs
 
-## Project Structure
+
 
